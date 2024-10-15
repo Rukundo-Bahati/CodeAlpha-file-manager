@@ -21,7 +21,6 @@ if not os.path.exists(PROCESSED_FOLDER):
 def index():
     return render_template("index.html")
 
-
 @app.route("/clean")
 def clean_data():
    return render_template("cleanData.html")
