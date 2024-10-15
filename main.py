@@ -33,7 +33,7 @@ def organise():
         print(f"Received path: {path}")
 
         # Normalize the path to handle backslashes correctly
-        path = path.replace("\\", "/")  # Optionally replace backslashes with slashes
+        path = path.replace("/", "\\")  # Optionally replace backslashes with slashes
 
         if not path:
             message = "Please provide a valid directory path."
