@@ -32,8 +32,16 @@ def organise():
         path = request.form.get('path')
         print(f"Received path: {path}")
 
+        # Normalize the path to handle backslashes correctly
+        path = path.replace("\\", "/")  # Optionally replace backslashes with slashes
+
         if not path:
             message = "Please provide a valid directory path."
+            return render_template("organiser.html", message=message)
+
+        # Check if the path exists
+        if not os.path.exists(path):
+            message = f"The directory '{path}' does not exist."
             return render_template("organiser.html", message=message)
 
         try:
@@ -45,18 +53,18 @@ def organise():
                     filename, extension = os.path.splitext(file)
                     extension = extension[1:]
 
-                    if os.path.exists(path + '/' + extension):
-                        shutil.move(path + '/' + file, path + '/' + extension + '/' + file)
-                    else:
-                        os.makedirs(path + '/' + extension)
-                        shutil.move(path + '/' + file, path + '/' + extension + '/' + file)
+                    # Create a subdirectory for the file type if it doesn't exist
+                    target_dir = os.path.join(path, extension)
+                    if not os.path.exists(target_dir):
+                        os.makedirs(target_dir)
+
+                    shutil.move(os.path.join(path, file), os.path.join(target_dir, file))
 
                 message = "Files organized successfully!"
         except Exception as e:
             message = f"An error occurred: {str(e)}"
 
     return render_template("organiser.html", message=message)
-
 
 # Route for file upload and data cleaning
 @app.route('/upload', methods=['POST'])
